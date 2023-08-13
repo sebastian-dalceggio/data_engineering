@@ -35,6 +35,7 @@ class PDDataframe:
         self.dataframe = dataframe
         self.schema = schema
         self._dataframe: pd.DataFrame
+        self._schema: pa.DataFrameSchema
 
     @property
     def dataframe(self) -> pd.DataFrame:
@@ -56,6 +57,26 @@ class PDDataframe:
         if self.schema is not None:
             self.schema.validate(dataframe)
         self._dataframe = dataframe
+
+    @property
+    def schema(self) -> pa.DataFrameSchema:
+        """Used to get the value of the schema attribute.
+
+        Returns:
+            pa.DataFrameSchema: Panderas Dataframe Schema
+        """
+        return self._schema
+    
+    @schema.setter
+    def schema(self, schema: pa.DataFrameSchema) -> None:
+        """Used to assign the value of the Panderas Dataframe Schema attribute.
+        It will validate if the dataframe follows the schema.
+
+        Args:
+            schema (pa.DataFrameSchema): Panderas Dataframe Schema
+        """
+        self._schema = schema
+        self._schema.validate(self.dataframe)
 
     def to_csv(self, file: File, index: bool = False) -> None:
         """Save a Pandas Dataframe as a csv file.
