@@ -1,7 +1,7 @@
 """Classes that has data for different types of files.
 """
 from dataclasses import dataclass
-
+from typing import Optional
 
 @dataclass
 class File:
@@ -9,11 +9,11 @@ class File:
 
     Attributes:
         file_name (str): name of the file
-        directory (str): directory where the file is saved. It has to end in '/'
+        directory Optional(str): directory where the file is saved. Defaults to None.
     """
 
     file_name: str
-    directory: str
+    directory: Optional(str) = None
 
     @property
     def path(self) -> str:
@@ -22,7 +22,9 @@ class File:
         Returns:
             str: path
         """
-        return f"{self.directory}{self.file_name}"
+        if self.directory:
+            return f"{self.directory}/{self.file_name}"
+        return self.file_name
 
 
 @dataclass
@@ -31,7 +33,7 @@ class CloudFile(File):
 
     Attributes:
         file_name (str): name of the file
-        directory (str): directory where the file is saved. It has to end in '/'
+        directory Optional(str): directory where the file is saved. Defaults to None.
         bucket (str): bucket name where it is saved
     """
 
@@ -44,10 +46,12 @@ class GCPStorageFile(CloudFile):
 
     Attributes:
         file_name (str): name of the file
-        directory (str): directory where the file is saved. It has to end in '/'
+        directory Optional(str): directory where the file is saved. Defaults to None.
         bucket (str): bucket name where it is saved
     """
 
     @property
     def path(self) -> str:
-        return f"gs://{self.bucket}/{self.directory}{self.file_name}"
+        if self.directory:
+            return f"gs://{self.bucket}/{self.directory}/{self.file_name}"
+        return f"gs://{self.bucket}/{self.file_name}"
