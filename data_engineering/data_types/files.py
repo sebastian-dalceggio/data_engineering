@@ -13,7 +13,7 @@ class File:
     """
 
     file_name: str
-    directory: Optional(str) = None
+    directory: Optional[str] = None
 
     @property
     def path(self) -> str:
